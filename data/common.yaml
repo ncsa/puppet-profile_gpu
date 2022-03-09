@@ -1,1 +1,16 @@
---- {}
+---
+
+profile_gpu::dcgm::install::bind_mount_install: null   # See reference.md for when this is needed, set to null on purpose
+profile_gpu::dcgm::install::bind_dst_path: ""          # See reference.md for when this is needed
+profile_gpu::dcgm::install::bind_mnt_options: "nosuid,nodev,noatime,bind"
+profile_gpu::dcgm::install::bind_parent_dst_mount: ""  # See reference.md for when this is needed
+profile_gpu::dcgm::install::bind_src_path: ""          # See reference.md for when this is needed
+
+profile_gpu::dcgm::install::install_dcgm: true
+profile_gpu::dcgm::install::packages:
+  - "datacenter-gpu-manager"
+profile_gpu::dcgm::install::dcgm_version: "2.4.6-1"  # 2.4.6-1 is known to work, 3.0.4-1 has problems
+
+profile_gpu::dcgm::telegraf::dcgm_telegraf_port: 8094
+profile_gpu::dcgm::telegraf::dcgm_telegraf_py_port: 5556
+profile_gpu::dcgm::telegraf::enable: true
