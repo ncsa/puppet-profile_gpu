@@ -1,6 +1,6 @@
 ---
 
-profile_gpu::enable_dcgm: true
+profile_gpu::dcgm:enable_dcgm: true
 
-profile_gpu::packages:
+profile_gpu::dcgm:packages:
   - "datacenter-gpu-manager"
