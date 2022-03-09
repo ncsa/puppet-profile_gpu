@@ -1,0 +1,14 @@
+# This file is managed by Puppet, manual changes will be lost
+[Unit]
+Description=NVIDIA DCGM service
+Conflicts=dcgm.service
+ 
+[Service]
+User=root
+PrivateTmp=false
+ 
+ExecStart=/usr/bin/nv-hostengine -n
+Restart=on-abort
+ 
+[Install]
+WantedBy=multi-user.target
