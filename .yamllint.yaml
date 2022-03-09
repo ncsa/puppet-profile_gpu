@@ -1,6 +1,6 @@
 ---
 extends: "default"
- 
+
 rules:
   # 80 chars should be enough, but don't fail if a line is longer
   line-length: false
@@ -10,7 +10,7 @@ rules:
   comments:
     require-starting-space: false
   quoted-strings: {quote-type: "double"}
- 
+
 ignore: |
   .gitlab-ci.yml
   .fixtures.yml
