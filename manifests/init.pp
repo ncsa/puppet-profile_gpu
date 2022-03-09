@@ -6,6 +6,6 @@
 #   include profile_gpu
 class profile_gpu {
 
-  include ::profile_gpu:dcgm
+  include profile_gpu::dcgm
 
 }
