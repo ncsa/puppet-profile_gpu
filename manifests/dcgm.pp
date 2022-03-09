@@ -22,7 +22,6 @@ class profile_gpu::dcgm (
     $ensure_parm = 'absent'
   }
 
-  
   systemd::unit_file { 'nvidia-dcgm.service':
     content => file("${module_name}/nvidia-dcgm.service"),
     enable  => $enable_dcgm,
