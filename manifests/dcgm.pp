@@ -41,7 +41,7 @@ class profile_gpu::dcgm (
   }
 
   $dcgmd_telegraf_config = {
-    'execStart'             => $exec_start,
+    'exec_start'             => $exec_start,
     'dcgm_telegraf_py_path' => $dcgm_telegraf_py_path,
   }
 
