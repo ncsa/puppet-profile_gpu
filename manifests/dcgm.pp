@@ -31,8 +31,18 @@ class profile_gpu::dcgm (
   # Setup config for template
   # There is probably a better way to do this like a custom fact
   if find_file('/usr/bin/python3') {
+
     $exec_start = '/usr/bin/python3'
     $dcgm_telegraf_py_path = '/usr/local/dcgm/bindings/python3/dcgm_telegraf.py'
+
+    # TMP fix in place for some bug in NVIDIA DCGM
+    file_line { 'fix_dcgm_telegraf_py':
+      path               => '/usr/local/dcgm/bindings/python3/dcgm_telegraf.py',
+      line               => '        self.m_sock.sendto(payload.encode(), self.m_dest)',
+      match              => '        self.m_sock.sendto(payload, self.m_dest)',
+      append_on_no_match => 'false',
+    }
+
   } elsif find_file('/usr/bin/python') {
     $exec_start = '/usr/bin/python'
     $dcgm_telegraf_py_path = '/usr/local/dcgm/bindings/dcgm_telegraf.py'
@@ -41,7 +51,7 @@ class profile_gpu::dcgm (
   }
 
   $dcgmd_telegraf_config = {
-    'exec_start'             => $exec_start,
+    'exec_start'            => $exec_start,
     'dcgm_telegraf_py_path' => $dcgm_telegraf_py_path,
   }
 
