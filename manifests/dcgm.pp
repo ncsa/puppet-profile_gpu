@@ -39,14 +39,27 @@ class profile_gpu::dcgm (
     file_line { 'fix_dcgm_telegraf_py':
       path               => '/usr/local/dcgm/bindings/python3/dcgm_telegraf.py',
       line               => '        self.m_sock.sendto(payload.encode(), self.m_dest)',
-      #match              => '        self.m_sock.sendto(payload, self.m_dest)',  #never matches
       match              => '        self\.m_sock.sendto\(payload, self\.m_dest\)',
-      #append_on_no_match => 'false',
+      append_on_no_match => 'false',
     }
+
+
+    # TODO patch /usr/local/dcgm/bindings/python3/dcgm_telegraf.py again
+    # this time for:
+    # sed -i "/^DEFAULT_TELEGRAF_PORT = 8094$/a LISTEN_HOST = '127.0.0.1'\nLISTEN_PORT = 5556"
+    # sed -i "/self.m_sock = socket(AF_INET, SOCK_DGRAM)/a\ self.m_sock.bind((LISTEN_HOST, LISTEN_PORT))"
 
   } elsif find_file('/usr/bin/python') {
     $exec_start = '/usr/bin/python'
     $dcgm_telegraf_py_path = '/usr/local/dcgm/bindings/dcgm_telegraf.py'
+
+
+    # TODO patch /usr/local/dcgm/bindings/dcgm_telegraf.py again
+    # this time for:
+    # sed -i "/^DEFAULT_TELEGRAF_PORT = 8094$/a LISTEN_HOST = '127.0.0.1'\nLISTEN_PORT = 5556"
+    # sed -i "/self.m_sock = socket(AF_INET, SOCK_DGRAM)/a\ self.m_sock.bind((LISTEN_HOST, LISTEN_PORT))"
+
+
   } else {
     fail('Unable to determine python version')
   }
@@ -61,5 +74,10 @@ class profile_gpu::dcgm (
     enable  => $enable_dcgm,
     active  => $enable_dcgm,
   }
+
+
+  # TODO add something that puts in place dcgmd.conf and restarts telegraf
+
+
 
 }
