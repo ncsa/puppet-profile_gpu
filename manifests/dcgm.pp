@@ -28,5 +28,24 @@ class profile_gpu::dcgm (
     active  => $enable_dcgm,
   }
 
+  # Setup config for template
+  if find_file('/usr/bin/python3') {
+    notify{'there is a python3':}
+  } else {
+    notify{'No python3':}
+  }
+
+  $dcgmd_telegraf_config = {
+    'execStart' => 'TODO',
+  }
+
+
+  systemd::unit_file { 'dcgmd-telegraf.service':
+    content => epp( "${module_name}/dcgmd-telegraf.service.epp", $dcgmd_telegraf_config),
+    enable  => $enable_dcgm,
+    active  => $enable_dcgm,
+  }
+
+
 
 }

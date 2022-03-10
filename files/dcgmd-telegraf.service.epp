@@ -1,14 +1,17 @@
+<%- | $execStart,
+| -%>
 # This file is managed by Puppet, manual changes will be lost
 [Unit]
-Description=NVIDIA DCGM service
-Conflicts=dcgm.service
+Description=DCGM Telegraf service
+Requires=nvidia-dcgm.service
  
 [Service]
-User=root
+Type=simple
+User=telegraf
 PrivateTmp=false
- 
-ExecStart=/usr/bin/nv-hostengine -n
+ExecStart=<%= $execStart %>
 Restart=on-abort
  
 [Install]
 WantedBy=multi-user.target
+
