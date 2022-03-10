@@ -31,17 +31,17 @@ class profile_gpu::dcgm (
   # Setup config for template
   # There is probably a better way to do this like a custom fact
   if find_file('/usr/bin/python3') {
-    $execStart = '/usr/bin/python3'
+    $exec_start = '/usr/bin/python3'
     $dcgm_telegraf_py_path = '/usr/local/dcgm/bindings/python3/dcgm_telegraf.py'
   } elsif find_file('/usr/bin/python') {
-    $execStart = '/usr/bin/python'
+    $exec_start = '/usr/bin/python'
     $dcgm_telegraf_py_path = '/usr/local/dcgm/bindings/dcgm_telegraf.py'
   } else {
-    fail("Unable to determine python version")
+    fail('Unable to determine python version')
   }
 
   $dcgmd_telegraf_config = {
-    'execStart'            => $execStart,
+    'execStart'             => $exec_start,
     'dcgm_telegraf_py_path' => $dcgm_telegraf_py_path,
   }
 
