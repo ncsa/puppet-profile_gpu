@@ -39,7 +39,8 @@ class profile_gpu::dcgm (
     file_line { 'fix_dcgm_telegraf_py':
       path               => '/usr/local/dcgm/bindings/python3/dcgm_telegraf.py',
       line               => '        self.m_sock.sendto(payload.encode(), self.m_dest)',
-      match              => '        self.m_sock.sendto(payload, self.m_dest)',
+      #match              => '        self.m_sock.sendto(payload, self.m_dest)',  #never matches
+      match              => '        self\.m_sock.sendto\(payload, self\.m_dest\)',
       #append_on_no_match => 'false',
     }
 
