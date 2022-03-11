@@ -50,6 +50,14 @@ class profile_gpu::dcgm (
     # sed -i "/^DEFAULT_TELEGRAF_PORT = 8094$/a LISTEN_HOST = '127.0.0.1'\nLISTEN_PORT = 5556"
     # sed -i "/self.m_sock = socket(AF_INET, SOCK_DGRAM)/a\ self.m_sock.bind((LISTEN_HOST, LISTEN_PORT))"
 
+    # Modification so dcgmd-telegraf listens on a static port and only on localhost
+    file_line { 'fix_dcgm_telegraf_py':
+      path               => '/usr/local/dcgm/bindings/python3/dcgm_telegraf.py',
+      after              => 'DEFAULT_TELEGRAF_PORT = 8094',
+      line               => 'LISTEN_HOST = \'127.0.0.1\'\nLISTEN_PORT = 5556',
+      append_on_no_match => 'false',
+    }
+
   } elsif find_file('/usr/bin/python') {
     $exec_start = '/usr/bin/python'
     $dcgm_telegraf_py_path = '/usr/local/dcgm/bindings/dcgm_telegraf.py'
@@ -77,8 +85,6 @@ class profile_gpu::dcgm (
     before  => File['/etc/telegraf/telegraf.d/dcgmd.conf'],
   }
 
-
-  # TODO add something that puts in place dcgmd.conf and restarts telegraf
   file { '/etc/telegraf/telegraf.d/dcgmd.conf':
     ensure => $ensure_parm,
     mode   => '0640',
