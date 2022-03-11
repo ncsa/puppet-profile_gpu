@@ -70,7 +70,7 @@ class profile_gpu::dcgm (
     line               => '        self.m_sock.bind((LISTEN_HOST, LISTEN_PORT))',
     append_on_no_match => 'false',
   }
-  
+
   systemd::unit_file { 'dcgmd-telegraf.service':
     content => epp( "${module_name}/dcgmd-telegraf.service.epp", $dcgmd_telegraf_config),
     enable  => $enable_dcgm,
