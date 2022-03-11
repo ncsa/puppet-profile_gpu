@@ -66,7 +66,8 @@ class profile_gpu::dcgm (
   # Second Modification so dcgmd-telegraf listens on a static port and only on localhost
   file_line { 'dcgm_telegraf_py_localhost_listen_only_part2':
     path               => $dcgm_telegraf_py_path,
-    after              => '        self.m_sock = socket(AF_INET, SOCK_DGRAM)',
+    #after              => '        self.m_sock = socket(AF_INET, SOCK_DGRAM)',   # would add at EOF
+    after              => '        self\.m_sock = socket\(AF_INET, SOCK_DGRAM\)',
     line               => '        self.m_sock.bind((LISTEN_HOST, LISTEN_PORT))',
     append_on_no_match => 'false',
   }
