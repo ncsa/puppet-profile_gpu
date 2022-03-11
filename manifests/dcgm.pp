@@ -55,16 +55,28 @@ class profile_gpu::dcgm (
     append_on_no_match => 'false',
   }
 
-  # Modification so dcgmd-telegraf listens on a static port and only on localhost
+  # First Modification so dcgmd-telegraf listens on a static port and only on localhost
   file_line { 'dcgm_telegraf_py_localhost_listen_only':
     path               => $dcgm_telegraf_py_path,
     after              => 'DEFAULT_TELEGRAF_PORT = 8094',
-    line               => "LISTEN_HOST = '127.0.0.1'\nLISTEN_PORT = 5556",
+    # Cannot add them both in one go, line isn't smart enough to check multiple lines
+    # So you instead end up added the two lines every time puppet runs
+    #line               => "LISTEN_HOST = '127.0.0.1'\nLISTEN_PORT = 5556",
+    line               => "LISTEN_HOST = '127.0.0.1'",
     append_on_no_match => 'false',
+    before             => file_line['dcgm_telegraf_py_localhost_listen_only_part2'],
   }
 
   # Second Modification so dcgmd-telegraf listens on a static port and only on localhost
   file_line { 'dcgm_telegraf_py_localhost_listen_only_part2':
+    path               => $dcgm_telegraf_py_path,
+    after              => "LISTEN_HOST = '127.0.0.1'",
+    line               => 'LISTEN_PORT = 5556',
+    append_on_no_match => 'false',
+  }
+
+  # Third Modification so dcgmd-telegraf listens on a static port and only on localhost
+  file_line { 'dcgm_telegraf_py_localhost_listen_only_part3':
     path               => $dcgm_telegraf_py_path,
     #after              => '        self.m_sock = socket(AF_INET, SOCK_DGRAM)',   # would add at EOF
     after              => '        self\.m_sock = socket\(AF_INET, SOCK_DGRAM\)',
