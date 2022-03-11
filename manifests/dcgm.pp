@@ -84,7 +84,7 @@ class profile_gpu::dcgm (
     mode   => '0640',
     owner  => 'root',
     group  => 'telegraf',
-    notify  => Service['telegraf'],
+    notify => Service['telegraf'],
   }
 
 
