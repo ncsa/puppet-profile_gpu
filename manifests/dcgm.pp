@@ -32,55 +32,45 @@ class profile_gpu::dcgm (
   # Setup config for template
   # There is probably a better way to do this like a custom fact
   if find_file('/usr/bin/python3') {
-
     $exec_start = '/usr/bin/python3'
     $dcgm_telegraf_py_path = '/usr/local/dcgm/bindings/python3/dcgm_telegraf.py'
-
-    # TMP fix in place for some bug in NVIDIA DCGM
-    file_line { 'fix_dcgm_telegraf_py':
-      path               => '/usr/local/dcgm/bindings/python3/dcgm_telegraf.py',
-      line               => '        self.m_sock.sendto(payload.encode(), self.m_dest)',
-      match              => '        self\.m_sock.sendto\(payload, self\.m_dest\)',
-      append_on_no_match => 'false',
-    }
-
-
-    # TODO patch /usr/local/dcgm/bindings/python3/dcgm_telegraf.py again
-    # this time for:
-    # sed -i "/^DEFAULT_TELEGRAF_PORT = 8094$/a LISTEN_HOST = '127.0.0.1'\nLISTEN_PORT = 5556"
-    # sed -i "/self.m_sock = socket(AF_INET, SOCK_DGRAM)/a\ self.m_sock.bind((LISTEN_HOST, LISTEN_PORT))"
-
-    # Modification so dcgmd-telegraf listens on a static port and only on localhost
-    file_line { 'dcgm_telegraf_py_localhost_listen_only':
-      path               => '/usr/local/dcgm/bindings/python3/dcgm_telegraf.py',
-      after              => 'DEFAULT_TELEGRAF_PORT = 8094',
-      #line               => 'LISTEN_HOST = \'127.0.0.1\'\nLISTEN_PORT = 5556',    # \n not interpreted
-      line               => "LISTEN_HOST = '127.0.0.1'\nLISTEN_PORT = 5556",
-      append_on_no_match => 'false',
-    }
-
-    #TODO second patch for socket
-
   } elsif find_file('/usr/bin/python') {
     $exec_start = '/usr/bin/python'
     $dcgm_telegraf_py_path = '/usr/local/dcgm/bindings/dcgm_telegraf.py'
-
-
-    # TODO patch /usr/local/dcgm/bindings/dcgm_telegraf.py again
-    # this time for:
-    # sed -i "/^DEFAULT_TELEGRAF_PORT = 8094$/a LISTEN_HOST = '127.0.0.1'\nLISTEN_PORT = 5556"
-    # sed -i "/self.m_sock = socket(AF_INET, SOCK_DGRAM)/a\ self.m_sock.bind((LISTEN_HOST, LISTEN_PORT))"
-
-
   } else {
     fail('Unable to determine python version')
   }
+
 
   $dcgmd_telegraf_config = {
     'exec_start'            => $exec_start,
     'dcgm_telegraf_py_path' => $dcgm_telegraf_py_path,
   }
 
+  # TMP fix in place for some bug in NVIDIA DCGM
+  file_line { 'fix_dcgm_telegraf_py':
+    path               => $dcgm_telegraf_py_path,
+    match              => '        self\.m_sock.sendto\(payload, self\.m_dest\)',
+    line               => '        self.m_sock.sendto(payload.encode(), self.m_dest)',
+    append_on_no_match => 'false',
+  }
+
+  # Modification so dcgmd-telegraf listens on a static port and only on localhost
+  file_line { 'dcgm_telegraf_py_localhost_listen_only':
+    path               => $dcgm_telegraf_py_path,
+    after              => 'DEFAULT_TELEGRAF_PORT = 8094',
+    line               => "LISTEN_HOST = '127.0.0.1'\nLISTEN_PORT = 5556",
+    append_on_no_match => 'false',
+  }
+
+  # Second Modification so dcgmd-telegraf listens on a static port and only on localhost
+  file_line { 'dcgm_telegraf_py_localhost_listen_only_part2':
+    path               => $dcgm_telegraf_py_path,
+    after              => '        self.m_sock = socket(AF_INET, SOCK_DGRAM)',
+    line               => '        self.m_sock.bind((LISTEN_HOST, LISTEN_PORT))',
+    append_on_no_match => 'false',
+  }
+  
   systemd::unit_file { 'dcgmd-telegraf.service':
     content => epp( "${module_name}/dcgmd-telegraf.service.epp", $dcgmd_telegraf_config),
     enable  => $enable_dcgm,
