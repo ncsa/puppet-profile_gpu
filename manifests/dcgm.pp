@@ -54,7 +54,8 @@ class profile_gpu::dcgm (
     file_line { 'dcgm_telegraf_py_localhost_listen_only':
       path               => '/usr/local/dcgm/bindings/python3/dcgm_telegraf.py',
       after              => 'DEFAULT_TELEGRAF_PORT = 8094',
-      line               => 'LISTEN_HOST = \'127.0.0.1\'\nLISTEN_PORT = 5556',
+      #line               => 'LISTEN_HOST = \'127.0.0.1\'\nLISTEN_PORT = 5556',    # \n not interpreted
+      line               => "LISTEN_HOST = '127.0.0.1'\nLISTEN_PORT = 5556",
       append_on_no_match => 'false',
     }
 
