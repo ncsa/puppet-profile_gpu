@@ -59,6 +59,8 @@ class profile_gpu::dcgm (
       append_on_no_match => 'false',
     }
 
+    #TODO second patch for socket
+
   } elsif find_file('/usr/bin/python') {
     $exec_start = '/usr/bin/python'
     $dcgm_telegraf_py_path = '/usr/local/dcgm/bindings/dcgm_telegraf.py'
