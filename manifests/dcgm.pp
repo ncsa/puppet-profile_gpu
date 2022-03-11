@@ -64,11 +64,11 @@ class profile_gpu::dcgm (
     #line               => "LISTEN_HOST = '127.0.0.1'\nLISTEN_PORT = 5556",
     line               => "LISTEN_HOST = '127.0.0.1'",
     append_on_no_match => 'false',
-    before             => file_line['dcgm_telegraf_py_localhost_listen_only_part2'],
+    #before             => file_line['dcgm_telegraf_py_localhost_listen_only_part2'],   # error: A substring operation does not accept a String as a ...
   }
 
   # Second Modification so dcgmd-telegraf listens on a static port and only on localhost
-  file_line { 'dcgm_telegraf_py_localhost_listen_only_part2':
+  -> file_line { 'dcgm_telegraf_py_localhost_listen_only_part2':
     path               => $dcgm_telegraf_py_path,
     after              => "LISTEN_HOST = '127.0.0.1'",
     line               => 'LISTEN_PORT = 5556',
