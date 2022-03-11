@@ -26,6 +26,7 @@ class profile_gpu::dcgm (
     content => file("${module_name}/nvidia-dcgm.service"),
     enable  => $enable_dcgm,
     active  => $enable_dcgm,
+    before  => File['/etc/telegraf/telegraf.d/dcgmd.conf'],
   }
 
   # Setup config for template
@@ -73,11 +74,18 @@ class profile_gpu::dcgm (
     content => epp( "${module_name}/dcgmd-telegraf.service.epp", $dcgmd_telegraf_config),
     enable  => $enable_dcgm,
     active  => $enable_dcgm,
+    before  => File['/etc/telegraf/telegraf.d/dcgmd.conf'],
   }
 
 
   # TODO add something that puts in place dcgmd.conf and restarts telegraf
-
+  file { '/etc/telegraf/telegraf.d/dcgmd.conf':
+    ensure => $ensure_parm,
+    mode   => '0640',
+    owner  => 'root',
+    group  => 'telegraf',
+    notify  => Service['telegraf'],
+  }
 
 
 }
