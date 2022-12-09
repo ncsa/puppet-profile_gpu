@@ -92,7 +92,8 @@ class profile_gpu::dcgm::telegraf (
   # Modification to set custom DEFAULT_TELEGRAF_PORT
   file_line { 'dcgm_telegraf_py_set_DEFAULT_TELEGRAF_PORT':
     path               => $dcgm_telegraf_py_path,
-    match              => 'DEFAULT_TELEGRAF_PORT = 8094',
+    #match              => 'DEFAULT_TELEGRAF_PORT = 8094',
+    match              => 'DEFAULT_TELEGRAF_PORT.*',
     line               => "DEFAULT_TELEGRAF_PORT = ${dcgm_telegraf_port}",
     append_on_no_match => 'false',
     require            => [ Package['datacenter-gpu-manager'], File_Line['dcgm_telegraf_py_localhost_listen_only'] ],
