@@ -63,8 +63,6 @@ class profile_gpu::dcgm::telegraf (
   file_line { 'dcgm_telegraf_py_localhost_listen_only':
     path               => $dcgm_telegraf_py_path,
     after              => 'DEFAULT_TELEGRAF_PORT = 8094',
-    # Cannot add them both in one go, line isn't smart enough to check multiple lines
-    # So you instead end up added the two lines every time puppet runs
     line               => "LISTEN_HOST = '127.0.0.1'",
     append_on_no_match => 'false',
     require            => Package['datacenter-gpu-manager'],
