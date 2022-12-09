@@ -74,7 +74,7 @@ class profile_gpu::dcgm::telegraf (
   file_line { 'dcgm_telegraf_py_localhost_listen_only_part2':
     path               => $dcgm_telegraf_py_path,
     after              => "LISTEN_HOST = '127.0.0.1'",
-    match              => "^LISTEN_PORT = .*",   # TODO testing this
+    match              => '^LISTEN_PORT = .*',   # TODO testing this
     line               => "LISTEN_PORT = ${dcgm_telegraf_py_port}",
     append_on_no_match => 'false',
     require            => [ Package['datacenter-gpu-manager'], File_Line['dcgm_telegraf_py_localhost_listen_only'] ],
