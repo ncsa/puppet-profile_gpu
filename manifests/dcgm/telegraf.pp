@@ -70,14 +70,13 @@ class profile_gpu::dcgm::telegraf (
   }
 
   # Second Modification so dcgmd-telegraf listens on a static port and only on localhost
-  # TODO this doesn't work if port is updated after the fact
   file_line { 'dcgm_telegraf_py_localhost_listen_only_part2':
-    path               => $dcgm_telegraf_py_path,
-    after              => "LISTEN_HOST = '127.0.0.1'",
-    match              => '^LISTEN_PORT = .*',   # TODO testing this
-    line               => "LISTEN_PORT = ${dcgm_telegraf_py_port}",
-    require            => [ Package['datacenter-gpu-manager'], File_Line['dcgm_telegraf_py_localhost_listen_only'] ],
-    notify             => Service['dcgmd-telegraf.service'],
+    path    => $dcgm_telegraf_py_path,
+    after   => "LISTEN_HOST = '127.0.0.1'",
+    match   => '^LISTEN_PORT = .*',
+    line    => "LISTEN_PORT = ${dcgm_telegraf_py_port}",
+    require => [ Package['datacenter-gpu-manager'], File_Line['dcgm_telegraf_py_localhost_listen_only'] ],
+    notify  => Service['dcgmd-telegraf.service'],
   }
 
   # Third Modification so dcgmd-telegraf listens on a static port and only on localhost
