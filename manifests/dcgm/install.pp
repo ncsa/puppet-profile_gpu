@@ -110,10 +110,14 @@ class profile_gpu::dcgm::install (
         'ensure'  => $dcgm_version,
         'require' => Mount[ $bind_dst_path ],
       }
-      ensure_packages( $packages , $install_options)
 
     } else {
-      ensure_packages( $packages , { 'ensure' => $dcgm_version } )
+
+      $install_options = {
+        'ensure' => $dcgm_version,
+      }
     }
+
+    ensure_packages( $packages , $install_options)
   }
 }
