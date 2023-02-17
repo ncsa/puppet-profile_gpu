@@ -7,7 +7,7 @@ Conflicts=dcgm.service
 User=root
 PrivateTmp=false
  
-ExecStart=/usr/bin/nv-hostengine -n
+ExecStart=/usr/bin/nv-hostengine -n --service-account nvidia-dcgm
 Restart=on-abort
  
 [Install]
