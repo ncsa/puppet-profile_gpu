@@ -42,6 +42,58 @@ To collect telegraf metrics you must define the hiera value `profile_gpu::dcgm::
 - This is set to no value in data/common.yaml and must be defined in your project control-repo.
 - See REFERENCE.md for details
 
+In order to enable Nvidia performance counters on Ampere and older cards (Hopper may not require this work around), DCGM must not be running and collecting data. Disabling DCGM and Telegraf can be done via a Slurm prolog/epilog (an example is listed below. To make this profile not restart the services, a fact has been created to look for a file. This file is defined in Hiera:
+
+- `profile_gpu::dcgm::telegraf::nv_debug_check: "/var/spool/slurmd/nvperfenabled"`
+
+If this file is found, DCGM and Telegraf will not be restarted.
+
+Prolog:
+
+```
+#!/bin/bash
+
+touch /var/spool/slurmd/nvperfenabled
+
+IFS=',' read -ra features <<< "$SLURM_JOB_CONSTRAINTS"
+
+for feature in "${features[@]}"; do
+   echo $feature
+   if [ "$feature" = "nvperf" ]; then
+      /usr/bin/systemctl stop dcgmd-telegraf.service
+      /usr/bin/systemctl stop nvidia-dcgm.service
+      /usr/bin/systemctl stop nvidia-persistenced.service
+      /usr/sbin/modprobe -rf nvidia_uvm nvidia_drm nvidia_modeset nvidia
+      /usr/sbin/modprobe nvidia NVreg_RestrictProfilingToAdminUsers=0
+      /usr/bin/modprobe nvidia_uvm nvidia_drm nvidia_modeset
+      /usr/bin/systemctl start nvidia-persistenced.service
+   fi
+done
+```
+
+Epilog:
+
+```
+#!/bin/bash
+
+rm -f /var/spool/slurmd/nvperfenabled
+
+IFS=',' read -ra features <<< "$SLURM_JOB_CONSTRAINTS"
+
+for feature in "${features[@]}"; do
+   if [ "$feature" = "nvperf" ]; then
+      /usr/bin/systemctl stop dcgmd-telegraf.service
+      /usr/bin/systemctl stop nvidia-dcgm.service
+      /usr/bin/systemctl stop nvidia-persistenced.service
+      /usr/sbin/modprobe -rf nvidia_uvm nvidia_drm nvidia_modeset nvidia
+      /usr/sbin/modprobe nvidia
+      /usr/sbin/modprobe nvidia_uvm nvidia_drm nvidia_modeset
+      /usr/bin/systemctl start nvidia-persistenced.service
+      /usr/bin/systemctl start dcgmd-telegraf.service
+   fi
+done
+```
+
 ## Dependencies
 
 - [puppet/systemd](https://forge.puppet.com/modules/puppet/systemd)

@@ -14,3 +14,4 @@ profile_gpu::dcgm::install::dcgm_version: "2.4.6-1"  # 2.4.6-1 is known to work,
 profile_gpu::dcgm::telegraf::dcgm_telegraf_port: 8094
 profile_gpu::dcgm::telegraf::dcgm_telegraf_py_port: 5556
 profile_gpu::dcgm::telegraf::enable: true
+profile_gpu::dcgm::telegraf::nv_debug_check: "/var/spool/slurmd/nvperfenabled"
