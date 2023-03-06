@@ -42,11 +42,7 @@ To collect telegraf metrics you must define the hiera value `profile_gpu::dcgm::
 - This is set to no value in data/common.yaml and must be defined in your project control-repo.
 - See REFERENCE.md for details
 
-In order to enable Nvidia performance counters on Ampere and older cards (Hopper may not require this work around), DCGM must not be running and collecting data. Disabling DCGM and Telegraf can be done via a Slurm prolog/epilog (an example is listed below. To make this profile not restart the services, a fact has been created to look for a file. This file is defined in Hiera:
-
-- `profile_gpu::dcgm::telegraf::nv_debug_check: "/var/spool/slurmd/nvperfenabled"`
-
-If this file is found, DCGM and Telegraf will not be restarted.
+In order to enable Nvidia performance counters on Ampere and older cards (Hopper may not require this work around), DCGM must not be running and collecting data. Disabling DCGM and Telegraf can be done via a Slurm prolog/epilog (an example is listed below. To make this profile not restart the services, a fact has been created to look for a file. This file is hardcoded to look at '/var/spool/slurmd/nvperfenabled'. If this file is found, DCGM and Telegraf will not be restarted.
 
 Prolog:
 
