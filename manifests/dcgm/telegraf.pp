@@ -9,12 +9,6 @@
 # @param enable
 #   Enable or disable telegraf reporting for DCGM
 #
-# @param allownvdebugging
-#   Enable a file check to not reenable dcgm when a user is debugging
-#
-# @param nvidia_debug_check
-#   The file to check to see if user is debugging and not start the service
-#
 # @example
 #   include profile_gpu::dcgm::telegraf
 class profile_gpu::dcgm::telegraf (
@@ -30,9 +24,9 @@ class profile_gpu::dcgm::telegraf (
   }
   
  
-  # Setup nvidia-dcgm systemd service
-  #
   if $facts['nvdebugging'] != true {
+    # Setup nvidia-dcgm systemd service
+    #
     systemd::unit_file { 'nvidia-dcgm.service':
       content => file("${module_name}/nvidia-dcgm.service"),
       enable  => $enable,
