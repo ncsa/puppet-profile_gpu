@@ -149,21 +149,7 @@ include profile_gpu::dcgm::telegraf
 
 The following parameters are available in the `profile_gpu::dcgm::telegraf` class:
 
-* [`dcgm_telegraf_port`](#-profile_gpu--dcgm--telegraf--dcgm_telegraf_port)
-* [`dcgm_telegraf_py_port`](#-profile_gpu--dcgm--telegraf--dcgm_telegraf_py_port)
 * [`enable`](#-profile_gpu--dcgm--telegraf--enable)
-
-##### <a name="-profile_gpu--dcgm--telegraf--dcgm_telegraf_port"></a>`dcgm_telegraf_port`
-
-Data type: `Integer`
-
-Port that telegraf socket will listen on, defaults to 8094
-
-##### <a name="-profile_gpu--dcgm--telegraf--dcgm_telegraf_py_port"></a>`dcgm_telegraf_py_port`
-
-Data type: `Integer`
-
-Port that DCGM python process will listen on, defaults to 5556
 
 ##### <a name="-profile_gpu--dcgm--telegraf--enable"></a>`enable`
 

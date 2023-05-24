@@ -56,7 +56,6 @@ IFS=',' read -ra features <<< "$SLURM_JOB_CONSTRAINTS"
 for feature in "${features[@]}"; do
    echo $feature
    if [ "$feature" = "nvperf" ]; then
-      /usr/bin/systemctl stop dcgmd-telegraf.service
       /usr/bin/systemctl stop nvidia-dcgm.service
       /usr/bin/systemctl stop nvidia-persistenced.service
       /usr/sbin/modprobe -rf nvidia_uvm nvidia_drm nvidia_modeset nvidia
@@ -78,14 +77,12 @@ IFS=',' read -ra features <<< "$SLURM_JOB_CONSTRAINTS"
 
 for feature in "${features[@]}"; do
    if [ "$feature" = "nvperf" ]; then
-      /usr/bin/systemctl stop dcgmd-telegraf.service
       /usr/bin/systemctl stop nvidia-dcgm.service
       /usr/bin/systemctl stop nvidia-persistenced.service
       /usr/sbin/modprobe -rf nvidia_uvm nvidia_drm nvidia_modeset nvidia
       /usr/sbin/modprobe nvidia
       /usr/sbin/modprobe nvidia_uvm nvidia_drm nvidia_modeset
       /usr/bin/systemctl start nvidia-persistenced.service
-      /usr/bin/systemctl start dcgmd-telegraf.service
    fi
 done
 ```
