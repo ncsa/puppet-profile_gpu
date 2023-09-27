@@ -1,9 +1,9 @@
 Facter.add('nvdebugging') do
   setcode do
     if File.exist? '/var/spool/slurmd/nvperfenabled'
-       true
+      true
     else
-       false
+      false
     end
   end
 end

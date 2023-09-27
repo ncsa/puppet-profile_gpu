@@ -16,14 +16,12 @@ class profile_gpu::dcgm::telegraf (
   Integer $dcgm_telegraf_py_port,
   Boolean $enable,
 ) {
-
   if ($enable) {
     $ensure_parm = 'present'
   } else {
     $ensure_parm = 'absent'
   }
-  
- 
+
   if $facts['nvdebugging'] != true {
     # Setup nvidia-dcgm systemd service
     #
@@ -75,7 +73,7 @@ class profile_gpu::dcgm::telegraf (
       after   => "LISTEN_HOST = '127.0.0.1'",
       match   => '^LISTEN_PORT = .*',
       line    => "LISTEN_PORT = ${dcgm_telegraf_py_port}",
-      require => [ Package['datacenter-gpu-manager'], File_Line['dcgm_telegraf_py_localhost_listen_only'] ],
+      require => [Package['datacenter-gpu-manager'], File_Line['dcgm_telegraf_py_localhost_listen_only']],
       notify  => Service['dcgmd-telegraf.service'],
     }
 
@@ -112,7 +110,7 @@ class profile_gpu::dcgm::telegraf (
       active  => $enable,
       before  => File['/etc/telegraf/telegraf.d/dcgmd.conf'],
     }
-  
+
     #
     # Setup dcgmd telegraf config
     #

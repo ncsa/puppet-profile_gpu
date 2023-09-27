@@ -71,9 +71,7 @@ class profile_gpu::dcgm::install (
   Array[String] $packages,
   String        $dcgm_version,
 ) {
-
   if ($install_dcgm) {
-
     if ($bind_mount_install) {
       # We need to setup bind mounts for DCGM to install into
 
@@ -83,8 +81,7 @@ class profile_gpu::dcgm::install (
         mode   => '0755',
         owner  => 'root',
         group  => 'root',
-        before => Mount[ $bind_dst_path ],
-
+        before => Mount[$bind_dst_path],
       }
 
       # Mark sure dst mount point exists
@@ -102,17 +99,15 @@ class profile_gpu::dcgm::install (
         device  => $bind_src_path,
         options => $bind_mnt_options,
         require => [
-          Mount[ $bind_parent_dst_mount ],
-        ]
+          Mount[$bind_parent_dst_mount],
+        ],
       }
 
       $install_options = {
         'ensure'  => $dcgm_version,
-        'require' => Mount[ $bind_dst_path ],
+        'require' => Mount[$bind_dst_path],
       }
-
     } else {
-
       $install_options = {
         'ensure' => $dcgm_version,
       }
