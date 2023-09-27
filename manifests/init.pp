@@ -3,8 +3,7 @@
 # @example
 #   include profile_gpu
 class profile_gpu {
-
   include profile_gpu::dcgm::install
   include profile_gpu::dcgm::telegraf
-
+  include profile_gpu::nhc
 }

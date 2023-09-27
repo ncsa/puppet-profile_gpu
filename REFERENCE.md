@@ -7,8 +7,9 @@
 ### Classes
 
 * [`profile_gpu`](#profile_gpu): GPU specific host configuration
-* [`profile_gpu::dcgm::install`](#profile_gpudcgminstall): Installs the NVIDIA DCGM (Data Center GPU Manager)
-* [`profile_gpu::dcgm::telegraf`](#profile_gpudcgmtelegraf): Configures telegraf reporting for DCGM
+* [`profile_gpu::dcgm::install`](#profile_gpu--dcgm--install): Installs the NVIDIA DCGM (Data Center GPU Manager)
+* [`profile_gpu::dcgm::telegraf`](#profile_gpu--dcgm--telegraf): Configures telegraf reporting for DCGM
+* [`profile_gpu::nhc`](#profile_gpu--nhc): Enables management of GPU related NHC (Node Health Check) scripts
 
 ## Classes
 
@@ -24,7 +25,7 @@ GPU specific host configuration
 include profile_gpu
 ```
 
-### <a name="profile_gpudcgminstall"></a>`profile_gpu::dcgm::install`
+### <a name="profile_gpu--dcgm--install"></a>`profile_gpu::dcgm::install`
 
 Installs the NVIDIA DCGM (Data Center GPU Manager)
 
@@ -40,16 +41,16 @@ include profile_gpu::dcgm::install
 
 The following parameters are available in the `profile_gpu::dcgm::install` class:
 
-* [`bind_mount_install`](#bind_mount_install)
-* [`bind_dst_path`](#bind_dst_path)
-* [`bind_mnt_options`](#bind_mnt_options)
-* [`bind_parent_dst_mount`](#bind_parent_dst_mount)
-* [`bind_src_path`](#bind_src_path)
-* [`dcgm_version`](#dcgm_version)
-* [`install_dcgm`](#install_dcgm)
-* [`packages`](#packages)
+* [`bind_mount_install`](#-profile_gpu--dcgm--install--bind_mount_install)
+* [`bind_dst_path`](#-profile_gpu--dcgm--install--bind_dst_path)
+* [`bind_mnt_options`](#-profile_gpu--dcgm--install--bind_mnt_options)
+* [`bind_parent_dst_mount`](#-profile_gpu--dcgm--install--bind_parent_dst_mount)
+* [`bind_src_path`](#-profile_gpu--dcgm--install--bind_src_path)
+* [`dcgm_version`](#-profile_gpu--dcgm--install--dcgm_version)
+* [`install_dcgm`](#-profile_gpu--dcgm--install--install_dcgm)
+* [`packages`](#-profile_gpu--dcgm--install--packages)
 
-##### <a name="bind_mount_install"></a>`bind_mount_install`
+##### <a name="-profile_gpu--dcgm--install--bind_mount_install"></a>`bind_mount_install`
 
 Data type: `Boolean`
 
@@ -65,7 +66,7 @@ where /usr/local is mounted as a shared filesystem. In which
 case you'd set this to true. If the DCGM install would not
 clobber any shared filesystems, then set this to false
 
-##### <a name="bind_dst_path"></a>`bind_dst_path`
+##### <a name="-profile_gpu--dcgm--install--bind_dst_path"></a>`bind_dst_path`
 
 Data type: `String`
 
@@ -76,7 +77,7 @@ clobber a shared filesystem. Commonly needed on systems
 where /usr/local is mounted as a shared filesystem. In which
 case you'd most likely set this to /usr/local/dcgm
 
-##### <a name="bind_mnt_options"></a>`bind_mnt_options`
+##### <a name="-profile_gpu--dcgm--install--bind_mnt_options"></a>`bind_mnt_options`
 
 Data type: `String`
 
@@ -86,7 +87,7 @@ Only needed on systems where DCGM install files would
 clobber a shared filesystem. Commonly needed on systems
 where /usr/local is mounted as a shared filesystem.
 
-##### <a name="bind_parent_dst_mount"></a>`bind_parent_dst_mount`
+##### <a name="-profile_gpu--dcgm--install--bind_parent_dst_mount"></a>`bind_parent_dst_mount`
 
 Data type: `String`
 
@@ -97,7 +98,7 @@ clobber a shared filesystem. Commonly needed on systems
 where /usr/local is mounted as a shared filesystem. In which
 case you'd most likely set this to /usr/local
 
-##### <a name="bind_src_path"></a>`bind_src_path`
+##### <a name="-profile_gpu--dcgm--install--bind_src_path"></a>`bind_src_path`
 
 Data type: `String`
 
@@ -109,7 +110,7 @@ where /usr/local is mounted as a shared filesystem. This path
 can be set to any path that's local to the node (ie not a shared
 mount). Commonly you can use /var/log/dcgm
 
-##### <a name="dcgm_version"></a>`dcgm_version`
+##### <a name="-profile_gpu--dcgm--install--dcgm_version"></a>`dcgm_version`
 
 Data type: `String`
 
@@ -120,19 +121,19 @@ scripts (to allow it to listen on localhost) which are likely
 to break in new versions. See version in data/common.yaml
 for versions known to work
 
-##### <a name="install_dcgm"></a>`install_dcgm`
+##### <a name="-profile_gpu--dcgm--install--install_dcgm"></a>`install_dcgm`
 
 Data type: `Boolean`
 
 Whether to install NVIDIA DCGM
 
-##### <a name="packages"></a>`packages`
+##### <a name="-profile_gpu--dcgm--install--packages"></a>`packages`
 
 Data type: `Array[String]`
 
 Required packages for Nvidia DCGM
 
-### <a name="profile_gpudcgmtelegraf"></a>`profile_gpu::dcgm::telegraf`
+### <a name="profile_gpu--dcgm--telegraf"></a>`profile_gpu::dcgm::telegraf`
 
 Configures telegraf reporting for DCGM
 
@@ -148,25 +149,56 @@ include profile_gpu::dcgm::telegraf
 
 The following parameters are available in the `profile_gpu::dcgm::telegraf` class:
 
-* [`dcgm_telegraf_port`](#dcgm_telegraf_port)
-* [`dcgm_telegraf_py_port`](#dcgm_telegraf_py_port)
-* [`enable`](#enable)
+* [`dcgm_telegraf_port`](#-profile_gpu--dcgm--telegraf--dcgm_telegraf_port)
+* [`dcgm_telegraf_py_port`](#-profile_gpu--dcgm--telegraf--dcgm_telegraf_py_port)
+* [`enable`](#-profile_gpu--dcgm--telegraf--enable)
 
-##### <a name="dcgm_telegraf_port"></a>`dcgm_telegraf_port`
+##### <a name="-profile_gpu--dcgm--telegraf--dcgm_telegraf_port"></a>`dcgm_telegraf_port`
 
 Data type: `Integer`
 
 Port that telegraf socket will listen on, defaults to 8094
 
-##### <a name="dcgm_telegraf_py_port"></a>`dcgm_telegraf_py_port`
+##### <a name="-profile_gpu--dcgm--telegraf--dcgm_telegraf_py_port"></a>`dcgm_telegraf_py_port`
 
 Data type: `Integer`
 
 Port that DCGM python process will listen on, defaults to 5556
 
-##### <a name="enable"></a>`enable`
+##### <a name="-profile_gpu--dcgm--telegraf--enable"></a>`enable`
 
 Data type: `Boolean`
 
 Enable or disable telegraf reporting for DCGM
+
+### <a name="profile_gpu--nhc"></a>`profile_gpu::nhc`
+
+Enables management of GPU related NHC (Node Health Check) scripts
+
+#### Examples
+
+##### 
+
+```puppet
+include profile_gpu::nhc
+```
+
+#### Parameters
+
+The following parameters are available in the `profile_gpu::nhc` class:
+
+* [`manage_default_scripts`](#-profile_gpu--nhc--manage_default_scripts)
+* [`custom_scripts`](#-profile_gpu--nhc--custom_scripts)
+
+##### <a name="-profile_gpu--nhc--manage_default_scripts"></a>`manage_default_scripts`
+
+Data type: `Boolean`
+
+If true, install general scripts that are considered appropriate for all clusters
+
+##### <a name="-profile_gpu--nhc--custom_scripts"></a>`custom_scripts`
+
+Data type: `Hash`
+
+Allow the addition of custom scripts beyond the scope of default scripts
 
