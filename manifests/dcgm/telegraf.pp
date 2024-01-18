@@ -24,10 +24,10 @@ class profile_gpu::dcgm::telegraf (
   }
 
   file { '/etc/telegraf/scripts/dcgm':
-    ensure  => 'directory',
-    mode    => '0650',
-    owner   => 'root',
-    group   => 'telegraf',
+    ensure => 'directory',
+    mode   => '0650',
+    owner  => 'root',
+    group  => 'telegraf',
   }
 
   file { '/etc/telegraf/scripts/dcgm/dcgmi_stats.sh':
