@@ -1,7 +1,7 @@
 #!/bin/bash
 # This file is managed by Puppet
 
-gpu_model=$(lspci | grep "controller: NVIDIA Corporation" | head -n 1 | grep -o -P '(?<=Corporation\ ).*(?=\ ?\[)')
+gpu_model=$(lspci | grep "controller: NVIDIA Corporation" | head -n 1 | grep -o -P '(?<=Corporation\ ).*(?=\ ?\[)' | xargs)
 case ${gpu_model} in
 	GM204GL|GM200GL|TU104GL|GA102GL)
 		while read -r p; do
