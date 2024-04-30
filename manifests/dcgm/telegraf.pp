@@ -8,7 +8,16 @@
 class profile_gpu::dcgm::telegraf (
   Boolean $enable,
 ) {
-  if ($enable) {
+  if ($enable and $facts['gpu_nvidia'] ) {
+    if $facts['nvdebugging'] != true {
+      # Setup nvidia-dcgm systemd service
+      systemd::unit_file { 'nvidia-dcgm.service':
+        content => file("${module_name}/nvidia-dcgm.service"),
+        enable  => $enable,
+        require => Package['datacenter-gpu-manager'],
+        active  => $enable,
+      }
+    }
     $ensure_parm = 'present'
   } else {
     $ensure_parm = 'absent'
@@ -37,16 +46,5 @@ class profile_gpu::dcgm::telegraf (
     owner   => 'root',
     group   => 'telegraf',
     notify  => Service['telegraf'],
-  }
-
-  if $facts['nvdebugging'] != true {
-    # Setup nvidia-dcgm systemd service
-    #
-    systemd::unit_file { 'nvidia-dcgm.service':
-      content => file("${module_name}/nvidia-dcgm.service"),
-      enable  => $enable,
-      require => Package['datacenter-gpu-manager'],
-      active  => $enable,
-    }
   }
 }
