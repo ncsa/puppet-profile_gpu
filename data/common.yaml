@@ -9,7 +9,7 @@ profile_gpu::dcgm::install::bind_src_path: ""          # See reference.md for wh
 profile_gpu::dcgm::install::install_dcgm: true
 profile_gpu::dcgm::install::packages:
   - "datacenter-gpu-manager"
-profile_gpu::dcgm::install::dcgm_version: "latest"
+profile_gpu::dcgm::install::dcgm_version: "installed"
 
 profile_gpu::dcgm::telegraf::enable: true
 
