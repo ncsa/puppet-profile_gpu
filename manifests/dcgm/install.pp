@@ -71,7 +71,7 @@ class profile_gpu::dcgm::install (
   Array[String] $packages,
   String        $dcgm_version,
 ) {
-  if ($install_dcgm) {
+  if ( $install_dcgm and $facts['has_gpu_nvidia'] ) {
     if ($bind_mount_install) {
       # We need to setup bind mounts for DCGM to install into
 
