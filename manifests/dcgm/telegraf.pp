@@ -8,8 +8,8 @@
 class profile_gpu::dcgm::telegraf (
   Boolean $enable,
 ) {
-  if ($enable and $facts['gpu_nvidia'] ) {
-    if $facts['nvdebugging'] != true {
+  if ( $enable and $facts['has_gpu_nvidia'] ) {
+    if ! $facts['has_slurm_nvperf_enabled'] {
       # Setup nvidia-dcgm systemd service
       systemd::unit_file { 'nvidia-dcgm.service':
         content => file("${module_name}/nvidia-dcgm.service"),
