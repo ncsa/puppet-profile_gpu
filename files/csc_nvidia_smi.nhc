@@ -25,11 +25,19 @@ function nhc_nvsmi_gather_data() {
 # Run the nvidia-smi utility and verify that all GPUs
 # are functioning properly.
 function check_nvsmi_healthmon() {
+    local expected_gpu_count=${1:-0}
     if [[ -z "$NVSMI_HEALTHMON_RC" ]]; then
         nhc_nvsmi_gather_data
     fi
 
     if [[ $NVSMI_HEALTHMON_RC -eq 0 ]]; then
+      if [[ $expected_gpu_count -ne 0 ]]; then
+        detected_gpu_count=`echo $NVSMI_HEALTHMON_OUTPUT|sed -e "s/|/\\n/g"| grep -c "NVIDIA .* On "`
+        if [[ $expected_gpu_count != $detected_gpu_count ]]; then
+           die 1 "$FUNCNAME: $NVIDIA_SMI_HEALTHMON: Missing or extra GPUs"
+           return 1
+        fi
+      fi
         dbg "$FUNCNAME:  $NVIDIA_SMI_HEALTHMON completed successfully"
         return 0
     elif [[ $NVSMI_HEALTHMON_RC -eq 4 ]]; then
