@@ -37,6 +37,15 @@ function check_nvsmi_healthmon() {
            die 1 "$FUNCNAME: $NVIDIA_SMI_HEALTHMON: Missing or extra GPUs"
            return 1
         fi
+        if echo $NVSMI_HEALTHMON_OUTPUT | grep -q "ERR!" ; then
+           die 1 "$FUNCNAME: $NVIDIA_SMI_HEALTHMON: nvidia-smi detected errors"
+           return 1
+        fi
+        gpus_with_no_errors=`echo $NVSMI_HEALTHMON_OUTPUT | sed -e "s/ 0 |/ 0\\n/g" | grep -c " 0$"`
+        if [[ $gpus_with_no_errors != $expected_gpu_count ]]; then
+           die 1 "$FUNCNAME: $NVIDIA_SMI_HEALTHMON: GPUs with memory errors"
+           return 1
+        fi
       fi
         dbg "$FUNCNAME:  $NVIDIA_SMI_HEALTHMON completed successfully"
         return 0
