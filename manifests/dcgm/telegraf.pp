@@ -14,7 +14,9 @@ class profile_gpu::dcgm::telegraf (
       systemd::unit_file { 'nvidia-dcgm.service':
         content => file("${module_name}/nvidia-dcgm.service"),
         enable  => $enable,
-        require => Package['datacenter-gpu-manager'],
+        require => [
+          Package[$profile_gpu::dcgm::install::packages],
+        ],
         active  => $enable,
       }
     }
