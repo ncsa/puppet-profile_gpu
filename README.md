@@ -46,14 +46,14 @@ To collect telegraf metrics for NVIDIA GPUs you should set the hiera value `prof
 
 Telegraf metrics for NVIDIA GPUs depend on the installation of DCGM. This module now defaults to installing DCGM v4 with compatibility for CUDA 12.
 
-If you would like to install compatibility for a different major version of CUDA, or additional major versions of CUDA, make sure the relevant `-cuda**` package(s) available and set data like the following in your control repo, including the relevant `cuda**` package for each version of CUDA you would like to support, e.g.:
+If you would like to install compatibility for a different major version of CUDA, or additional major versions of CUDA, make sure the relevant `-cuda**` package(s) available and set data like the following in your control repo, including the relevant `cuda**` package for each version of CUDA you would like to support. Similarly, if you are using the proprietary/legacy NVIDIA driver instead of the newer, "open" driver, you'll need to include the `-proprietary` RPM. E.g.:
 ```yaml
 profile_gpu::dcgm::install::packages:
   - "datacenter-gpu-manager-4-cuda12"
   - "datacenter-gpu-manager-4-cuda13"
   - "datacenter-gpu-manager-4-proprietary"
 ```
-It is not necessary to install the corresponding `datacenter-gpu-manager-4-proprietary-cuda**` package(s), and they are rather large. If it is pulled down as a "weak dependency" you may want to uninstall it (or prevent it from being installed in the first place).
+It is not necessary to install the corresponding `datacenter-gpu-manager-4-proprietary-cuda**` package(s) in ANY case, and they are rather large. If it is pulled down as a "weak dependency" you may want to uninstall it (or prevent it from being installed in the first place).
 
 If you would like to install v3, set the following in your control repo:
 ```yaml

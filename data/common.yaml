@@ -10,7 +10,6 @@ profile_gpu::dcgm::install::install_dcgm: true
 profile_gpu::dcgm::install::dcgm_version: "installed"
 profile_gpu::dcgm::install::packages:
   - "datacenter-gpu-manager-4-cuda12"
-  - "datacenter-gpu-manager-4-proprietary"
 
 profile_gpu::dcgm::telegraf::enable: true
 
