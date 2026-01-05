@@ -46,14 +46,24 @@ To collect telegraf metrics for NVIDIA GPUs you should set the hiera value `prof
 
 Telegraf metrics for NVIDIA GPUs depend on the installation of DCGM. This module now defaults to installing DCGM v4 with compatibility for CUDA 12.
 
-If you would like to install compatibility for a different major version of CUDA, or additional major versions of CUDA, make sure the relevant `-cuda**` package(s) available and set data like the following in your control repo, including the relevant `cuda**` package for each version of CUDA you would like to support. Similarly, if you are using the proprietary/legacy NVIDIA driver instead of the newer, "open" driver, you'll need to include the `-proprietary` RPM. E.g.:
+If you would like to install compatibility for a different major version of CUDA, or additional major versions of CUDA, make sure the relevant `-cuda**` package(s) are available and set data like the following in your control repo, including the relevant `-cudaXX` package for each version of CUDA you would like to support. Similarly, if you are using the proprietary/legacy NVIDIA driver instead of the newer, "open" driver, you'll need to include the `-proprietary` RPM. E.g., to install DCGM on a system with older GPUs, including support for both CUDA 12 and CUDA 13, specify the following in Hiera:
 ```yaml
 profile_gpu::dcgm::install::packages:
   - "datacenter-gpu-manager-4-cuda12"
   - "datacenter-gpu-manager-4-cuda13"
   - "datacenter-gpu-manager-4-proprietary"
 ```
-It is not necessary to install the corresponding `datacenter-gpu-manager-4-proprietary-cuda**` package(s) in ANY case, and they are rather large. If it is pulled down as a "weak dependency" you may want to uninstall it (or prevent it from being installed in the first place).
+
+If all you want to do is run `dcgmi dmon`, e.g., via telegraf, it should not be necessary to install the corresponding `datacenter-gpu-manager-4-cuda**` package(s), and since they are rather large you may want to omit them. You can include the "*-core" RPM instead. E.g., to install the bare minimum for monitoring GPUs on a system with "open" GPU drivers, set this:
+```yaml
+profile_gpu::dcgm::install::packages:
+  - "datacenter-gpu-manager-4-core"
+```
+Note that you must include the appropriate `-cudaXX` package in order to run `dcgmi diag`. And there are likely other use cases where it is necessary, so if space is not a concern it should probably be installed (hence the default for this profile).
+
+On the other hand, it does not seem necessary to install the corresponding `datacenter-gpu-manager-4-proprietary-cuda**` package(s) in ANY case, and they are also rather large, so it is suggested to omit those (which is the default for this profile).
+
+If any undesired RPMs are pulled down as "weak dependencies" you may want to uninstall them (or prevent them from being installed in the first place).
 
 If you would like to install v3, set the following in your control repo:
 ```yaml
@@ -69,7 +79,7 @@ yum -y remove 'datacenter-gpu-manager*'
 puppet agent -t
 ```
 
-Before adding/removing `-cuda**` support packages you may want to perform a similar operation (or at least stop services).
+Before adding/removing `-cudaXX` support packages you may want to perform a similar operation (or at least stop services).
 
 In order to enable Nvidia performance counters on Ampere and older cards (Hopper may not require this work around), DCGM must not be running and collecting data. Disabling DCGM and Telegraf can be done via a Slurm prolog/epilog (an example is listed below. To make this profile not restart the services, a fact has been created to look for a file. This file is hardcoded to look at '/var/spool/slurmd/nvperfenabled'. If this file is found, DCGM and Telegraf will not be restarted.
 
